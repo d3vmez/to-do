@@ -1,3 +1,4 @@
+<%@page import="com.todo.serviceSOA.service.ToDo"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Date"%>
@@ -18,16 +19,7 @@
 </head>
 <body>
 
-	<%
-			List<String> list = (ArrayList) request.getAttribute("data");
-	if(list != null){
-			for(String a : list){ %>
-			
-			<p><%= a %></p>
-<% 
-			}
-	}
-	%>
+
 
 <!-- Button trigger modal -->
 	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -77,54 +69,60 @@
 
 		<div class="lista-tareas">
 			<h2>Tareas pendientes</h2>
+			<%
+			ArrayList<ToDo> todosPending = (ArrayList) request.getAttribute("todoPending");
+			for (ToDo todo : todosPending) {
+			%>
+
 			<div class="tarea">
-				<h3>Tarea1</h3>
-				<p>descripccionasdsadasd</p>
+				<h3><%=todo.getName()%></h3>
+				<p><%=todo.getDescription()%></p>
 				<input type="button" value="Eliminar"> <input type="button"
 					value="Actualizar">
 			</div>
 
-			<div class="tarea">
-				<h3>Tarea1</h3>
-				<p>descripccionasdsadasd</p>
-				<input type="button" value="Eliminar"> <input type="button"
-					value="Actualizar">
-			</div>
+			<%
+			}
+			%>
 
 		</div>
 
 		<div class="lista-tareas">
 			<h2>Tareas en progreso</h2>
+			<%
+			ArrayList<ToDo> todosProgress = (ArrayList) request.getAttribute("todoProgress");
+			for (ToDo todo : todosProgress) {
+			%>
+
 			<div class="tarea">
-				<h3>Tarea1</h3>
-				<p>descripccionasdsadasd</p>
+				<h3><%=todo.getName()%></h3>
+				<p><%=todo.getDescription()%></p>
 				<input type="button" value="Eliminar"> <input type="button"
 					value="Actualizar">
 			</div>
 
-			<div class="tarea">
-				<h3>Tarea1</h3>
-				<p>descripccionasdsadasd</p>
-				<input type="button" value="Eliminar"> <input type="button"
-					value="Actualizar">
-			</div>
+			<%
+			}
+			%>
 		</div>
 
 		<div class="lista-tareas">
 			<h2>Tareas finalizadas</h2>
+			<%
+			ArrayList<ToDo> todosFinalized = (ArrayList) request.getAttribute("todoFinalized");
+			for (ToDo todo : todosFinalized) {
+			%>
+
 			<div class="tarea">
-				<h3>Tarea1</h3>
-				<p>descripccionasdsadasd</p>
+				<h3><%=todo.getName()%></h3>
+				<p><%=todo.getDescription()%></p>
 				<input type="button" value="Eliminar"> <input type="button"
 					value="Actualizar">
 			</div>
 
-			<div class="tarea">
-				<h3>Tarea1</h3>
-				<p>descripccionasdsadasd</p>
-				<input type="button" value="Eliminar"> <input type="button"
-					value="Actualizar">
-			</div>
+			<%
+			}
+			%>
 		</div>
 
 	</section>
