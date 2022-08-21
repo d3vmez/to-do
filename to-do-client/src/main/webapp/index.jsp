@@ -1,3 +1,4 @@
+<%@page import="com.todo.serviceSOA.service.ToDoStatus"%>
 <%@page import="com.todo.serviceSOA.service.ToDo"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -47,6 +48,15 @@
 								tarea:</label> <input type="text" class="form-control"
 								id="name" name="name">
 						</div>
+						
+						<div class="mb-3">
+							<select class="form-select" name="status">
+							  <option value="<%= ToDoStatus.PENDING%>">Pendiente</option>
+							  <option value="<%= ToDoStatus.IN_PROGRESS%>">En progreso</option>
+							  <option value="<%= ToDoStatus.FINALIZED%>">Finalizada</option>
+							</select>
+						</div>
+						
 						<div class="mb-3">
 							<label for="message-text" class="col-form-label">Descripción:</label>
 							<textarea class="form-control" id="message-text" name="description"></textarea>

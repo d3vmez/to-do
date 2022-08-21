@@ -58,7 +58,7 @@ public class ToDoController extends HttpServlet {
 		
 		switch (operation) {
 		case "/new":
-			System.out.println("caca");
+			System.out.println("new");
 			newToDo(request, response);
 			break;
 			
@@ -74,7 +74,7 @@ public class ToDoController extends HttpServlet {
 
 		default:
 			
-			System.out.println("entro ");
+			System.out.println("default");
 			listToDo(request, response);
 			
 			break;
@@ -102,6 +102,29 @@ public class ToDoController extends HttpServlet {
 	
 	private void newToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		// Obtener datos del formulario
+		String nameParam = request.getParameter("name");
+		String descriptionParam = request.getParameter("description");
+		String statusParam = request.getParameter("status");
+		
+		// Guardar en la base de datos
+		ToDo todo = new ToDo();
+		todo.setName(nameParam);
+		todo.setDescription(descriptionParam);
+		if(statusParam.equalsIgnoreCase(ToDoStatus.PENDING.toString())) {
+			todo.setToDoStatus(ToDoStatus.PENDING);
+		}
+		else if (statusParam.equalsIgnoreCase(ToDoStatus.IN_PROGRESS.toString())) {
+			todo.setToDoStatus(ToDoStatus.IN_PROGRESS);
+		}
+		else {
+			todo.setToDoStatus(ToDoStatus.FINALIZED);
+		}
+		
+		operations.updateToDo(todo);
+		
+		response.sendRedirect("list");
+			
 	}
 	
 	private void updateToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
