@@ -25,7 +25,7 @@ import com.todo.serviceSOA.service.ToDoStatus;
 /**
  * Servlet implementation class TodoController
  */
-@WebServlet(urlPatterns = {"", "/new","/list"})
+@WebServlet(urlPatterns = {"", "/new","/list","/delete"})
 
 public class ToDoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -102,7 +102,7 @@ public class ToDoController extends HttpServlet {
 	
 	private void newToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		// Obtener datos del formulario
+		// Obtener parametros del formulario
 		String nameParam = request.getParameter("name");
 		String descriptionParam = request.getParameter("description");
 		String statusParam = request.getParameter("status");
@@ -132,6 +132,15 @@ public class ToDoController extends HttpServlet {
 	}
 	
 	private void deleteToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// Obtener parametro del enlace
+		String idParam = request.getParameter("id");
+		
+		// Borrar tarea
+		operations.deleteToDo(Integer.parseInt(idParam));
+		
+		response.sendRedirect("list");
+		
 		
 	}
 	
