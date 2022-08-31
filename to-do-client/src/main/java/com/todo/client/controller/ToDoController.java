@@ -26,20 +26,19 @@ import com.todo.serviceSOA.service.ToDoStatus;
 /**
  * Servlet implementation class TodoController
  */
-@WebServlet(urlPatterns = {"", "/new","/list","/delete","/find", "/update"})
+@WebServlet(urlPatterns = { "", "/new", "/list", "/delete", "/find", "/update" })
 
 public class ToDoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private ITodoService operations = null;
-       
+
 	@Override
 	public void init() throws ServletException {
-		
+
 		ToDoService service = new ToDoServiceLocator();
 		try {
-			 this.operations = new ToDoPortBindingStub(new URL(service.getToDoPortAddress()), service);
+			this.operations = new ToDoPortBindingStub(new URL(service.getToDoPortAddress()), service);
 		} catch (AxisFault e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
@@ -49,154 +48,162 @@ public class ToDoController extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		String operation = request.getServletPath();
 
 		System.out.println(operation);
-		
+
 		switch (operation) {
 		case "/new":
 			System.out.println("new");
 			newToDo(request, response);
 			break;
-			
+
 		case "/update":
 			System.out.println("update");
 			updateToDo(request, response);
 			break;
-			
+
 		case "/delete":
 			System.out.println("delete");
 			deleteToDo(request, response);
 			break;
-			
+
 		case "/find":
 			findToDo(request, response);
 			break;
 
 		default:
-			
+
 			System.out.println("default");
 			listToDo(request, response);
-			
+
 			break;
 		}
-		
+
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		doGet(request, response);
-		
+
 	}
-	
-	private void listToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
+	private void listToDo(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		request.setAttribute("todoPending", loadTodos(ToDoStatus.PENDING));
 		request.setAttribute("todoProgress", loadTodos(ToDoStatus.IN_PROGRESS));
 		request.setAttribute("todoFinalized", loadTodos(ToDoStatus.FINALIZED));
-		
+
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
-	
-	private void newToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
+	private void newToDo(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		// Obtener parametros del formulario
 		String nameParam = request.getParameter("name");
 		String descriptionParam = request.getParameter("description");
 		String statusParam = request.getParameter("status");
-		
+
 		// Guardar en la base de datos
 		ToDo todo = new ToDo();
 		todo.setName(nameParam);
 		todo.setDescription(descriptionParam);
-		if(statusParam.equalsIgnoreCase(ToDoStatus.PENDING.toString())) {
+		if (statusParam.equalsIgnoreCase(ToDoStatus.PENDING.toString())) {
 			todo.setToDoStatus(ToDoStatus.PENDING);
-		}
-		else if (statusParam.equalsIgnoreCase(ToDoStatus.IN_PROGRESS.toString())) {
+		} else if (statusParam.equalsIgnoreCase(ToDoStatus.IN_PROGRESS.toString())) {
 			todo.setToDoStatus(ToDoStatus.IN_PROGRESS);
-		}
-		else {
+		} else {
 			todo.setToDoStatus(ToDoStatus.FINALIZED);
 		}
-		
+
 		operations.updateToDo(todo);
-		
+
 		response.sendRedirect("list");
-			
+
 	}
-	
-	private void updateToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	private void updateToDo(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// Obtener parametros del formulario
 		String idParam = request.getParameter("idToDo");
 		String nameParam = request.getParameter("name");
 		String descriptionParam = request.getParameter("description");
 		String statusParam = request.getParameter("status");
-		
+
 		System.out.println(nameParam + descriptionParam + statusParam + idParam);
 		ToDo todo = new ToDo();
 		todo.setId(Integer.parseInt(idParam));
 		todo.setName(nameParam);
 		todo.setDescription(descriptionParam);
-		if(statusParam.equalsIgnoreCase(ToDoStatus.PENDING.toString())) {
+		if (statusParam.equalsIgnoreCase(ToDoStatus.PENDING.toString())) {
 			todo.setToDoStatus(ToDoStatus.PENDING);
-		}
-		else if (statusParam.equalsIgnoreCase(ToDoStatus.IN_PROGRESS.toString())) {
+		} else if (statusParam.equalsIgnoreCase(ToDoStatus.IN_PROGRESS.toString())) {
 			todo.setToDoStatus(ToDoStatus.IN_PROGRESS);
-		}
-		else {
+		} else {
 			todo.setToDoStatus(ToDoStatus.FINALIZED);
 		}
-		
+
 		operations.updateToDo(todo);
-		
+
 		response.sendRedirect("list");
-		
+
 	}
-	
-	private void deleteToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
+	private void deleteToDo(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
 		// Obtener parametro del enlace
 		String idParam = request.getParameter("id");
-		
+
 		// Borrar tarea
 		operations.deleteToDo(Integer.parseInt(idParam));
-		
+
 		response.sendRedirect("list");
-		
-		
+
 	}
-	
-	private void findToDo(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, IOException {
-		
+
+	private void findToDo(HttpServletRequest request, HttpServletResponse response)
+			throws NumberFormatException, IOException {
+
 		String id = request.getParameter("id");
 		ToDo todo = operations.findToDoById(Integer.parseInt(id));
 		String json = new Gson().toJson(todo);
-	    response.setContentType("application/json");
-	    response.setCharacterEncoding("UTF-8");
-	    response.getWriter().write(json);
-		
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(json);
+
 	}
-	
+
 	private List<ToDo> loadTodos(ToDoStatus status) throws MalformedURLException, RemoteException {
-		
+
 		List<ToDo> todos = new ArrayList<>();
 
-	
-		for (ToDo todo : operations.findAllToDosByStatus(status)) {
-			
-			todos.add(todo);
+		if (operations.findAllToDosByStatus(status) != null) {
+
+			for (ToDo todo : operations.findAllToDosByStatus(status)) {
+
+				todos.add(todo);
+			}
+
+			return todos;
+
 		}
-		
-		return todos;
-			
+
+		return null;
+
 	}
-	
 
 }

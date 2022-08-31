@@ -18,31 +18,26 @@ header {
     margin-bottom: 28px;
 }
 
-
-
 section{
 
-    width: 85%;
-    margin: auto;
-    min-width: 300px;
-    text-align: center;
-   
+    width: 100%;
+    text-align: center;   
     
 }
 
 div.lista-tareas{
 
-    display: inline-block;
-    width: 30%;
     padding: 10px;
-    min-width: 300px;
     margin: 7px;
     border-radius: 7px;
+    max-width: 350px;
+    min-width: 350px;
 }
 
 section>div:first-child{
     background-color: #FFAB76;
     border: 5px solid #ff6200;
+   
 }
 
 section>div:nth-child(2){
