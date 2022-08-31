@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.axis.AxisFault;
 
+import com.google.gson.Gson;
 import com.todo.serviceSOA.conection.ToDoPortBindingStub;
 import com.todo.serviceSOA.conection.ToDoService;
 import com.todo.serviceSOA.conection.ToDoServiceLocator;
@@ -25,7 +26,7 @@ import com.todo.serviceSOA.service.ToDoStatus;
 /**
  * Servlet implementation class TodoController
  */
-@WebServlet(urlPatterns = {"", "/new","/list","/delete"})
+@WebServlet(urlPatterns = {"", "/new","/list","/delete","/find", "/update"})
 
 public class ToDoController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -63,13 +64,17 @@ public class ToDoController extends HttpServlet {
 			break;
 			
 		case "/update":
-			System.out.println("caca");
+			System.out.println("update");
 			updateToDo(request, response);
 			break;
 			
 		case "/delete":
-			System.out.println("caca");
+			System.out.println("delete");
 			deleteToDo(request, response);
+			break;
+			
+		case "/find":
+			findToDo(request, response);
 			break;
 
 		default:
@@ -128,6 +133,30 @@ public class ToDoController extends HttpServlet {
 	}
 	
 	private void updateToDo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Obtener parametros del formulario
+		String idParam = request.getParameter("idToDo");
+		String nameParam = request.getParameter("name");
+		String descriptionParam = request.getParameter("description");
+		String statusParam = request.getParameter("status");
+		
+		System.out.println(nameParam + descriptionParam + statusParam + idParam);
+		ToDo todo = new ToDo();
+		todo.setId(Integer.parseInt(idParam));
+		todo.setName(nameParam);
+		todo.setDescription(descriptionParam);
+		if(statusParam.equalsIgnoreCase(ToDoStatus.PENDING.toString())) {
+			todo.setToDoStatus(ToDoStatus.PENDING);
+		}
+		else if (statusParam.equalsIgnoreCase(ToDoStatus.IN_PROGRESS.toString())) {
+			todo.setToDoStatus(ToDoStatus.IN_PROGRESS);
+		}
+		else {
+			todo.setToDoStatus(ToDoStatus.FINALIZED);
+		}
+		
+		operations.updateToDo(todo);
+		
+		response.sendRedirect("list");
 		
 	}
 	
@@ -141,6 +170,17 @@ public class ToDoController extends HttpServlet {
 		
 		response.sendRedirect("list");
 		
+		
+	}
+	
+	private void findToDo(HttpServletRequest request, HttpServletResponse response) throws NumberFormatException, IOException {
+		
+		String id = request.getParameter("id");
+		ToDo todo = operations.findToDoById(Integer.parseInt(id));
+		String json = new Gson().toJson(todo);
+	    response.setContentType("application/json");
+	    response.setCharacterEncoding("UTF-8");
+	    response.getWriter().write(json);
 		
 	}
 	

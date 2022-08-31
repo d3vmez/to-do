@@ -26,7 +26,7 @@
 	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 		data-bs-target="#newModal">Crear tarea</button>
 
-	<!-- Modal -->
+	<!-- Create Modal -->
 	<div class="modal fade" id="newModal" tabindex="-1"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
@@ -75,6 +75,60 @@
 			</form>
 		</div>
 	</div>
+	
+	<!-- Fin Modal -->
+	
+	<!-- Update Modal -->
+	<div class="modal fade" id="updateModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<form method="post" action="${pageContext.request.contextPath}/update" id="form">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Actualizar tarea</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+
+					<div class="modal-body">
+
+						<input type="hidden" id="idToDo" name="idToDo">
+
+						<div class="mb-3">
+							<label for="recipient-name" class="col-form-label">Nombre
+								tarea:</label> <input type="text" class="form-control" id="name"
+								name="name">
+						</div>
+
+						<div class="mb-3">
+							<select class="form-select" name="status">
+								<option value="<%= ToDoStatus.PENDING%>">Pendiente</option>
+								<option value="<%= ToDoStatus.IN_PROGRESS%>">En
+									progreso</option>
+								<option value="<%= ToDoStatus.FINALIZED%>">Finalizada</option>
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<label for="message-text" class="col-form-label">Descripción:</label>
+							<textarea class="form-control" id="description"
+								name="description"></textarea>
+						</div>
+
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<input type="submit" class="btn btn-primary" value="Crear tarea">
+					</div>
+
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<!-- Fin Modal -->
 
 	<!-- Delete Modal -->
 	<div class="modal" id="deleteModal" tabindex="-1" role="dialog"
@@ -114,7 +168,8 @@
 				<p><%=todo.getDescription()%></p>
 				<button type="button" class="btn btn-danger" data-bs-toggle="modal"
 					data-bs-target="#deleteModal" data-id="<%= todo.getId()%>">Borrar</button>
-				<input type="button" value="Actualizar">
+				<button type="button" class="btn btn-danger" data-bs-toggle="modal"
+					data-bs-target="#updateModal" data-id="<%= todo.getId()%>">Actualizar</button>
 			</div>
 
 			<%
@@ -183,10 +238,32 @@
 				var data = button.data('id');
 				var modal = $(this);
 				var a = modal.find('.modal-footer a')[0];
-
+				
 				a.href += data;
 				data = " ";
 	
+			});
+		});
+		
+		$(document).ready(function() {
+			$('#updateModal').on('show.bs.modal', function(event) {
+				
+				var button = $(event.relatedTarget);
+				var id = button.data('id');
+				var modal = $(this);
+				// var a = modal.find('#form')[0];
+				// a.action += '?id=' + id;
+	
+				$.ajax({
+					type: 'GET',
+					url: '${pageContext.request.contextPath}/find?id=' + id,
+					success: function(todo){
+		
+						$('#updateModal #idToDo').val(todo.id);
+						$('#updateModal #name').val(todo.name);
+						$('#updateModal #description').val(todo.description);
+					}
+				});		
 			});
 		});
 	</script>
