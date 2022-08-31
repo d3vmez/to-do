@@ -20,11 +20,11 @@
 </head>
 <body>
 
-
-
-	<!-- Button trigger modal -->
-	<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+	<header>
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 		data-bs-target="#newModal">Crear tarea</button>
+	</header>
 
 	<!-- Create Modal -->
 	<div class="modal fade" id="newModal" tabindex="-1"
@@ -153,9 +153,9 @@
 	</div>
 
 	<!-- Fin Modal -->
-
+	
 	<section>
-
+	
 		<div class="lista-tareas">
 			<h2>Tareas pendientes</h2>
 			<%
@@ -168,7 +168,7 @@
 				<p><%=todo.getDescription()%></p>
 				<button type="button" class="btn btn-danger" data-bs-toggle="modal"
 					data-bs-target="#deleteModal" data-id="<%= todo.getId()%>">Borrar</button>
-				<button type="button" class="btn btn-danger" data-bs-toggle="modal"
+				<button type="button" class="btn btn-secondary" data-bs-toggle="modal"
 					data-bs-target="#updateModal" data-id="<%= todo.getId()%>">Actualizar</button>
 			</div>
 
@@ -190,7 +190,8 @@
 				<p><%=todo.getDescription()%></p>
 				<button type="button" class="btn btn-danger" data-bs-toggle="modal"
 					data-bs-target="#deleteModal" data-id="<%= todo.getId()%>">Borrar</button>
-					<input type="button" value="Actualizar">
+				<button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+					data-bs-target="#updateModal" data-id="<%= todo.getId()%>">Actualizar</button>
 			</div>
 
 			<%
@@ -210,7 +211,8 @@
 				<p><%=todo.getDescription()%></p>
 				<button type="button" class="btn btn-danger" data-bs-toggle="modal"
 					data-bs-target="#deleteModal" data-id="<%= todo.getId()%>">Borrar</button>
-					 <input type="button" value="Actualizar">
+				<button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+					data-bs-target="#updateModal" data-id="<%= todo.getId()%>">Actualizar</button>
 			</div>
 
 			<%
