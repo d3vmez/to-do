@@ -60,7 +60,7 @@
 		</div>
 
 		<div class="lista-tareas col-4">
-			<h2>Tareas pendientes</h2>
+			<h2>Tareas en progreso</h2>
 			<%
 			try {
 				ArrayList<ToDo> todosPending = (ArrayList) request.getAttribute("todoProgress");
@@ -91,7 +91,7 @@
 		</div>
 
 		<div class="lista-tareas col-4">
-			<h2>Tareas pendientes</h2>
+			<h2>Tareas finalizadas</h2>
 			<%
 			try {
 				ArrayList<ToDo> todosPending = (ArrayList) request.getAttribute("todoFinalized");
