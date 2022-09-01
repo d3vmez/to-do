@@ -122,6 +122,12 @@
 		</div>
 		
 	</section>
+	
+	<footer>
+	
+		<p>https://github.com/mg0mez/</p>
+	
+	</footer>
 
 	<!-- Modals -->
 	<jsp:include page="fragments/modals/createModal.jsp" />
