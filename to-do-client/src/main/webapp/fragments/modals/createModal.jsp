@@ -41,8 +41,8 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">Close</button>
-						<input type="submit" class="btn btn-primary" value="Crear tarea">
+							data-bs-dismiss="modal">Cancelar</button>
+						<input type="submit" class="btn btn-danger" value="Crear tarea">
 					</div>
 
 				</div>

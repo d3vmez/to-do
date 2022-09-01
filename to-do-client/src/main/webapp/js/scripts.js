@@ -1,3 +1,4 @@
+		// función para el modal de borrado
 		$(document).ready(function() {
 			$('#deleteModal').on('show.bs.modal', function(event) {
 				var button = $(event.relatedTarget);
@@ -11,6 +12,7 @@
 			});
 		});
 
+		// función para el modal de actualización
 		$(document).ready(function() {
 			$('#updateModal').on('show.bs.modal', function(event) {
 
@@ -20,11 +22,14 @@
 				// var a = modal.find('#form')[0];
 				// a.action += '?id=' + id;
 
+				// petición para obtener los datos de la tarea que se quiere actualizar
 				$.ajax({
 					type : 'GET',
+					// contextPath se inicializa en la JSP
 					url : contextPath + '/find?id=' + id,
 					success : function(todo) {
 
+						// Cargar campos con los valores del JSON
 						$('#updateModal #idToDo').val(todo.id);
 						$('#updateModal #name').val(todo.name);
 						$('#updateModal #description').val(todo.description);

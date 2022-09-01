@@ -23,9 +23,15 @@ import com.todo.serviceSOA.service.ITodoService;
 import com.todo.serviceSOA.service.ToDo;
 import com.todo.serviceSOA.service.ToDoStatus;
 
+
 /**
- * Servlet implementation class TodoController
+ * @author mgomezgarrote
+ * Servlet para manejar las tareas
+ *
  */
+
+// Muy importante añadir la URL -> "" para que se carguen los archivos del css y js
+// Ver -> https://stackoverflow.com/questions/33248473/change-default-homepage-in-root-path-to-servlet-with-doget
 @WebServlet(urlPatterns = { "", "/new", "/list", "/delete", "/find", "/update" })
 
 public class ToDoController extends HttpServlet {
@@ -33,6 +39,11 @@ public class ToDoController extends HttpServlet {
 
 	private ITodoService operations = null;
 
+	/**
+	 *
+	 * Método para inicializar la comunicación con el servicio SOAP
+	 *
+	 */
 	@Override
 	public void init() throws ServletException {
 
@@ -53,24 +64,22 @@ public class ToDoController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		// Manejar las distintas operaciones de la aplicación mediante un switch
+		// que toma como caso una ruta (.../ruta)
 
 		String operation = request.getServletPath();
 
-		System.out.println(operation);
-
 		switch (operation) {
 		case "/new":
-			System.out.println("new");
 			newToDo(request, response);
 			break;
 
 		case "/update":
-			System.out.println("update");
 			updateToDo(request, response);
 			break;
 
 		case "/delete":
-			System.out.println("delete");
 			deleteToDo(request, response);
 			break;
 
@@ -79,10 +88,7 @@ public class ToDoController extends HttpServlet {
 			break;
 
 		default:
-
-			System.out.println("default");
 			listToDo(request, response);
-
 			break;
 		}
 
@@ -99,16 +105,35 @@ public class ToDoController extends HttpServlet {
 
 	}
 
+	/**
+	 * 
+	 * Método para cargar todas las tareas, clasificadas según su tipo
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void listToDo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		request.setAttribute("todoPending", loadTodos(ToDoStatus.PENDING));
 		request.setAttribute("todoProgress", loadTodos(ToDoStatus.IN_PROGRESS));
 		request.setAttribute("todoFinalized", loadTodos(ToDoStatus.FINALIZED));
-
+		
+		// Se utliza forward para enviar los datos a una JSP
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
 
+	/**
+	 * 
+	 * Método para crear una nueva tarea
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void newToDo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -121,6 +146,7 @@ public class ToDoController extends HttpServlet {
 		ToDo todo = new ToDo();
 		todo.setName(nameParam);
 		todo.setDescription(descriptionParam);
+		
 		if (statusParam.equalsIgnoreCase(ToDoStatus.PENDING.toString())) {
 			todo.setToDoStatus(ToDoStatus.PENDING);
 		} else if (statusParam.equalsIgnoreCase(ToDoStatus.IN_PROGRESS.toString())) {
@@ -130,11 +156,23 @@ public class ToDoController extends HttpServlet {
 		}
 
 		operations.updateToDo(todo);
-
+		
+		// Se utliza sendRedirect para aplicar el patron PRG (POST REDIRECT GET)
+		// Una vez realizada la operación la aplicación redirige a ../list
+		// donde se entrará en la opción default del switch para actualizar los datos
 		response.sendRedirect("list");
 
 	}
 
+	/**
+	 * 
+	 * Método para actualizar una tarea ya existente
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void updateToDo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// Obtener parametros del formulario
@@ -143,8 +181,10 @@ public class ToDoController extends HttpServlet {
 		String descriptionParam = request.getParameter("description");
 		String statusParam = request.getParameter("status");
 
-		System.out.println(nameParam + descriptionParam + statusParam + idParam);
 		ToDo todo = new ToDo();
+		
+		// Es necesario una id para identificar que se trata de una operación
+		// de actualización
 		todo.setId(Integer.parseInt(idParam));
 		todo.setName(nameParam);
 		todo.setDescription(descriptionParam);
@@ -162,6 +202,15 @@ public class ToDoController extends HttpServlet {
 
 	}
 
+	/**
+	 * 
+	 * Método para borrar una tarea
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void deleteToDo(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -175,6 +224,17 @@ public class ToDoController extends HttpServlet {
 
 	}
 
+	/**
+	 * 
+	 * Método para devolver una tarea según su id en formato JSON,
+	 * necesario para cargar los datos en el modal de actualización
+	 * 
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws NumberFormatException
+	 * @throws IOException
+	 */
 	private void findToDo(HttpServletRequest request, HttpServletResponse response)
 			throws NumberFormatException, IOException {
 
@@ -187,6 +247,15 @@ public class ToDoController extends HttpServlet {
 
 	}
 
+	/**
+	 * 
+	 * Método que devuelve una lista de tareas de un estado determinado
+	 * 
+	 * @param status
+	 * @return
+	 * @throws MalformedURLException
+	 * @throws RemoteException
+	 */
 	private List<ToDo> loadTodos(ToDoStatus status) throws MalformedURLException, RemoteException {
 
 		List<ToDo> todos = new ArrayList<>();
